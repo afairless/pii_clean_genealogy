@@ -20,6 +20,7 @@ def main():
     input_filepath = input_path / input_filename 
 
     output_path = Path.cwd() / 'output'
+    output_path.mkdir(parents=True, exist_ok=True)
     output_filepath = output_path / input_filename
 
 
@@ -35,6 +36,11 @@ def main():
 
     clean_tree = ET.ElementTree(clean_root)
     clean_tree.write(output_filepath, encoding='utf-8', xml_declaration=True)
+
+    # Gramps Web requires *.gramps file extension
+    clean_tree.write(
+        output_filepath.with_suffix('.gramps'), encoding='utf-8', 
+        xml_declaration=True)
 
 
 if __name__ == '__main__':
