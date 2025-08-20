@@ -1,5 +1,5 @@
 [project]
-name = "Clean email and phone from text"
+name = "pii_clean_genealogy"
 version = "0.1.0"
 description = "Remove email addresses and phone numbers from genealogy records"
 channels = ["conda-forge"]
@@ -17,6 +17,7 @@ python = ">=3.13.5,<3.14"
 scrubadub = ">=2.0.1, <3"
 
 [feature.dev.dependencies]
+pytest = ">=8.4.1,<9"
 
 [environments]
 default = { features = ["dev"], solve-group = "prod" }
