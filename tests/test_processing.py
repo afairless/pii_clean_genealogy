@@ -1,7 +1,7 @@
  
 import scrubadub
 
-from src.project import (
+from src.processing import (
     clean_phone_email,
     )
 
