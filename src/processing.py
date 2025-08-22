@@ -39,8 +39,8 @@ def clean_phone_email(txt: str) -> str:
     return cleaned_txt
 
 
-def extract_top_tag_genealogy_xml_tree(
-    root: ET.Element, top_level_tag: str) -> str:
+def extract_namespace_and_top_tag_genealogy_xml_tree(
+    root: ET.Element, top_level_tag: str) -> tuple[str, str]:
     """
     Extract the top-level tag from a genealogy XML tree
     """
@@ -48,7 +48,20 @@ def extract_top_tag_genealogy_xml_tree(
     namespace = root.tag.split('}')[0].strip('{')
     tag = f'{{{namespace}}}{top_level_tag}'
 
-    return tag
+    return namespace, tag
+
+
+def extract_gramps_version_from_namespace(namespace: str) -> str:
+    """
+    The Gramps version number is contained within the URL that is also the XML
+        tree namespace; extract it
+    """
+
+    namespace_split_1 = namespace.split('/')
+    namespace_split_2 = [e for e in namespace_split_1 if e]
+    version_number = namespace_split_2[-1]
+
+    return version_number
 
 
 def clean_genealogy_xml_tree(
@@ -76,5 +89,23 @@ def clean_genealogy_xml_tree(
                     e.text = clean_phone_email(e.text)
 
     return root
+
+
+def encode_gramps_xml_header(
+    namespace: str, gramps_version_number: str) -> tuple[bytes, bytes]:
+    """
+    Encode the Gramps XML header with the namespace and version number
+    """
+
+    xml_str = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    doctype_str = (
+        f'<!DOCTYPE database PUBLIC "-//Gramps//DTD Gramps XML '
+        f'{gramps_version_number}//EN"\n'
+        f'"{namespace}grampsxml.dtd">\n')
+
+    xml_bytes = xml_str.encode('utf-8')
+    doctype_bytes = doctype_str.encode('utf-8')
+
+    return xml_bytes, doctype_bytes
 
 
